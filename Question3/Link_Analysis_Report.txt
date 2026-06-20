@@ -1,0 +1,64 @@
+=== FILE SYSTEM AND LINK ANALYSIS REPORT ===
+
+1. INODE NUMBERS OF ALL FILES
+Command used: ls -li
+
+original.txt and hardlink.txt - SAME inode number
+symlink.txt - DIFFERENT inode number
+
+Observation: The inode number is a unique identifier assigned to each
+file's metadata entry in the filesystem. original.txt and hardlink.txt
+shared the exact same inode number, proving they both point to identical
+data blocks on disk. symlink.txt had a completely different inode number
+because it is an independent filesystem entry that only stores a path
+string pointing to original.txt.
+
+2. COMPARISON BETWEEN HARD LINK AND SYMBOLIC LINK
+
+HARD LINK (hardlink.txt):
+- Same inode number as original file
+- Link count increased from 1 to 2
+- Directly references the actual data blocks on disk
+- Continues to work even after original filename is deleted
+- Cannot link across different filesystems or partitions
+
+SYMBOLIC LINK (symlink.txt):
+- Has its own different inode number
+- Stores only the path string "original.txt" as its content
+- Works like a Windows shortcut pointing to a filename
+- Breaks immediately when original filename is deleted
+- Can link across different filesystems and can point to directories
+
+3. EFFECT OF DELETING THE ORIGINAL FILE
+Command used: rm original.txt
+
+Results after deletion:
+- cat hardlink.txt SUCCESS - showed full original content
+- cat symlink.txt FAILED - No such file or directory error
+
+Observation: When original.txt was deleted, the hard link hardlink.txt
+still worked perfectly because Linux only removes data from disk when ALL
+hard links pointing to it are removed and the link count reaches zero.
+The data still existed on disk with link count dropping from 2 to 1.
+The symbolic link symlink.txt broke immediately because it stored the
+literal path string "original.txt" which no longer existed in the
+directory, making it a dangling broken link.
+
+4. METADATA COLLECTED USING LINUX UTILITIES
+Command used: stat original.txt, stat hardlink.txt, stat symlink.txt
+
+Key findings from stat output:
+- original.txt and hardlink.txt showed identical inode numbers
+- Both showed Links: 2 before deletion confirming shared inode
+- symlink.txt size equaled the character count of path it stored
+- All timestamps were identical for hard link and original file
+- After deletion link count on hardlink.txt dropped to 1
+
+5. CONCLUSIONS DRAWN FROM THE EXPERIMENT
+- Hard links are simply multiple directory entries pointing to same inode
+- Symbolic links are separate files containing only a path reference
+- Data on disk persists until ALL hard links to it are removed
+- Symbolic links are fragile and break when target is moved or deleted
+- For backup and data protection hard links are safer than symbolic links
+- ls -li and stat are the most useful tools to investigate link behavior
+- Understanding links is critical for Linux system administration tasks
