@@ -1,0 +1,68 @@
+=== SECURE PROJECT WORKSPACE SETUP REPORT ===
+
+1. DIRECTORY STRUCTURE CREATED
+Command used: mkdir -p ~/project_workspace/docs ~/project_workspace/scripts ~/project_workspace/data
+
+Observation: I created a three-tier directory structure under project_workspace
+with separate folders for documentation (docs), executable scripts (scripts),
+and data files (data). The -p flag ensured all parent directories were created
+automatically in a single command without any errors.
+
+2. FILE PERMISSIONS BEFORE AND AFTER MODIFICATION
+
+BEFORE chmod:
+drwxrwxr-x docs
+drwxrwxr-x scripts
+drwxrwxr-x data
+
+AFTER chmod:
+drwx------ scripts  (chmod 700)
+drwxr-x--- docs     (chmod 750)
+drw-r----- data     (chmod 640)
+
+Commands used:
+chmod 700 scripts
+chmod 750 docs
+chmod 640 data
+
+Observation: chmod 700 on scripts means only the owner can read, write and
+execute - completely blocking group and others. chmod 750 on docs gives owner
+full access and group can read/execute but others have no access. chmod 640
+on data allows owner to read/write, group to only read, and others no access.
+This protects sensitive project files from unauthorized access.
+
+3. OWNERSHIP DETAILS
+Command used: stat ~/project_workspace/docs
+Command used: stat ~/project_workspace/scripts
+Command used: stat ~/project_workspace/data
+
+Output: Owner is g2025eb01845, Group is g2025eb01845
+
+Observation: The stat command revealed detailed metadata for each directory
+including the owner UID and GID. All directories are owned by my user account
+g2025eb01845. This means the permission bits for owner apply to me, giving
+me full control over the workspace while restricting others.
+
+4. UMASK VALUE USED
+Command used: umask
+Output: 0022
+
+After setting umask 027:
+Command used: umask 027
+New files automatically get permissions: 640 (rw-r-----)
+New directories automatically get permissions: 750 (rwxr-x---)
+
+Observation: The umask subtracts permissions from the default maximum when
+new files are created. Default for files is 666, minus 027 gives 640.
+Default for directories is 777, minus 027 gives 750. This means any new
+file created automatically gets secure permissions without needing chmod.
+
+5. HOW PERMISSIONS PROTECT PROJECT DATA
+Observation: Linux file permissions create a three-layer security model
+using owner, group, and others. By setting chmod 700 on the scripts folder,
+only I can access sensitive deployment scripts - other users on the system
+are completely blocked. The chmod 750 on docs allows team members in the
+same group to read documentation but not modify it. The umask 027 ensures
+all future files inherit secure permissions automatically, maintaining
+consistent protection across the entire workspace without manual intervention.
+EOF
