@@ -1,0 +1,79 @@
+=== FILE ACCESS AND I/O INVESTIGATION REPORT ===
+
+1. OPEN FILES IDENTIFIED
+Command used: lsof | head -40
+Command used: lsof -u g2025eb01845
+
+Observation: lsof (List Open Files) revealed all files currently open by
+running processes on the system. In Linux, everything is treated as a file
+including network sockets, pipes, and devices. The output showed each
+process ID (PID), the user running it, file descriptor number, file type,
+and the actual file path or socket information. Using lsof -u with my
+username filtered results to show only files opened by my user account,
+making it easier to see my active file handles.
+
+2. FILE DESCRIPTOR OBSERVATIONS
+Command used: ls -la /proc/$$/fd
+
+Observation: Every Linux process automatically gets three standard file
+descriptors when it starts:
+FD 0 = stdin (standard input - keyboard by default)
+FD 1 = stdout (standard output - terminal screen by default)
+FD 2 = stderr (standard error - terminal screen by default)
+The /proc/$$ directory gives real-time information about the current
+shell process. Exploring /proc/$$/fd showed all file descriptors
+currently open in my shell session. Additional descriptors beyond 0,1,2
+are assigned sequentially as new files are opened by the process.
+
+3. OUTPUT REDIRECTION AND ERROR REDIRECTION RESULTS
+
+Standard output redirection (>):
+Command: ls -la > output.txt
+Result: Directory listing was written to output.txt instead of screen
+
+Error redirection (2>):
+Command: ls /thisfolderdoesnotexist 2> error.txt
+Result: Error message captured in error.txt instead of shown on screen
+
+Combined redirection (2>&1):
+Command: ls -la /tmp /thisfolderdoesnotexist > both.txt 2>&1
+Result: Both normal output and error messages written into both.txt
+
+Append redirection (>>):
+Command: echo "Line 1" > mylog.txt then echo "Line 2" >> mylog.txt
+Result: Second line was added to end of file without overwriting Line 1
+
+Observation: Linux I/O redirection is a powerful shell feature. The >
+operator redirects stdout to a file overwriting existing content. The 2>
+operator redirects stderr separately. The 2>&1 syntax merges stderr into
+the stdout stream so both go to the same destination. The >> operator
+appends to a file preserving existing content. These are fundamental
+tools for logging, automation, and shell scripting.
+
+4. RESOURCE LIMITS OBSERVED
+Command used: ulimit -a
+
+Key limits observed from output:
+- open files: maximum file descriptors one process can open simultaneously
+- max user processes: maximum concurrent processes allowed per user
+- virtual memory: maximum addressable memory space for a process
+- stack size: maximum size of the process stack
+
+Observation: ulimit -a displayed all resource limits enforced by the OS
+on my shell session. These limits exist to prevent any single user or
+process from exhausting shared system resources. The open files limit is
+directly relevant to file I/O as it caps how many file descriptors can
+be open simultaneously. Administrators can adjust these limits using
+ulimit commands for specific workloads that need higher limits.
+
+5. HOW LINUX MANAGES FILE I/O
+Observation: Linux manages all file I/O through the Virtual File System
+(VFS) layer which provides a unified interface regardless of underlying
+filesystem type. Every I/O operation goes through integer file descriptors
+maintained per-process in a kernel file descriptor table. When a process
+opens a file the kernel assigns the lowest available descriptor number.
+The kernel handles read/write buffering through the page cache, greatly
+improving performance by reducing actual disk operations. Standard streams
+stdin stdout and stderr allow programs to work without knowing their
+actual input/output sources, enabling the powerful piping and redirection
+system that makes Linux shell scripting so flexible and powerful.

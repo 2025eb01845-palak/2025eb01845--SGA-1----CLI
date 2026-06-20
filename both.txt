@@ -1,0 +1,20 @@
+ls: cannot access '/thisfolderdoesnotexist': No such file or directory
+/tmp:
+total 48
+drwxrwxrwt 1 root         root         4096 Jun 20 11:21 .
+drwxr-xr-x 1 root         root         4096 Jun 20 10:53 ..
+-rw-r--r-- 1 g2025eb01845 g2025eb01845   77 Jun 20 10:53 code-oss-vm-session-state.json
+drwxr-xr-x 3 g2025eb01845 g2025eb01845 4096 Jun 20 10:53 gemini
+-rw-r--r-- 1 g2025eb01845 g2025eb01845 4747 Jun 20 10:53 minikube_delete_c199c9313c73aeda57892335618c865d350b2be3_0.log
+drwxrwxr-x 3 g2025eb01845 g2025eb01845 4096 Jun 20 10:53 node-compile-cache
+-rw-rw-r-- 1 g2025eb01845 g2025eb01845    0 Jun 20 11:21 restore_bashrc.lock
+-rw-rw-r-- 1 g2025eb01845 g2025eb01845    0 Jun 20 11:21 restore_profile.lock
+drwx------ 4 g2025eb01845 g2025eb01845 4096 Jun 20 10:53 tmp.ASmEWXnZgM
+-rw------- 1 root         root            0 Jun 20 10:53 tmp.EpgqceIvIV
+drwx------ 4 g2025eb01845 g2025eb01845 4096 Jun 20 11:21 tmp.gauljFPP8R
+drwxr-xr-x 3 g2025eb01845 g2025eb01845 4096 Jun 20 10:53 tmp.u7rRLRNtZv
+drwx------ 2 g2025eb01845 g2025eb01845 4096 Jun 20 10:53 tmux-1000
+srwxr-xr-x 1 g2025eb01845 g2025eb01845    0 Jun 20 10:53 vscode-git-5e5cd05063.sock
+srwxr-xr-x 1 g2025eb01845 g2025eb01845    0 Jun 20 11:21 vscode-ipc-c706acaf-745b-4889-8f0e-327344c3fa3b.sock
+srwxr-xr-x 1 g2025eb01845 g2025eb01845    0 Jun 20 10:53 vscode-ipc-fb9a4162-0083-4cbf-b653-7c1267fbc784.sock
+drwxr-xr-x 2 g2025eb01845 g2025eb01845 4096 Jun 20 10:53 vscode-skaffold-events-logs
