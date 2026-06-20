@@ -1,0 +1,60 @@
+=== STORAGE HEALTH ASSESSMENT REPORT ===
+Created using vi editor
+
+1. AVAILABLE STORAGE DEVICES
+Command used: lsblk
+
+Observation: lsblk listed all block storage devices in a tree format
+showing device names, sizes, type (disk/partition) and mount points.
+This gave a complete overview of all physical and logical storage
+devices available on the system including any loop devices used
+by the cloud shell environment.
+
+2. MOUNTED FILE SYSTEMS
+Command used: df -h
+Command used: mount | head -20
+
+Observation: df -h showed all currently mounted filesystems with
+human-readable sizes. Each row showed the filesystem, total capacity,
+used space, available space, usage percentage and mount point.
+The mount command revealed what filesystem types are mounted and
+with what options such as read-write or read-only access.
+
+3. DISK USAGE STATISTICS
+Command used: du -sh ~/
+Command used: du -sh /* 2>/dev/null | sort -rh | head -10
+
+Observation: du -sh showed total disk space consumed by my home
+directory. The sorted du command on root directories identified
+the top 10 largest space consumers on the system. This information
+is critical for capacity planning and identifying directories that
+could be cleaned up to free storage space.
+
+4. INODE UTILIZATION
+Command used: df -i
+
+Observation: df -i showed inode usage statistics across all mounted
+filesystems. Each file and directory on Linux consumes exactly one
+inode regardless of its size. A filesystem can completely run out
+of inodes before running out of disk space when there are millions
+of tiny files, which would prevent creation of any new files even
+with free disk space available. Monitoring inodes is as important
+as monitoring disk space.
+
+5. STORAGE HEALTH OBSERVATIONS
+Based on commands executed:
+- System storage appears healthy with no critical warnings
+- All filesystems are mounted and accessible
+- Home directory usage is within acceptable limits
+- No filesystem is critically close to 100% capacity
+- Inode usage is well within normal limits
+- Cloud shell provides adequate storage for development work
+
+6. RECOMMENDATIONS FOR IMPROVING STORAGE UTILIZATION
+- Run du -sh /* regularly to monitor large directories
+- Keep df -h output below 80% to avoid storage issues
+- Use df -i to check inode usage on mail or log servers
+- Archive old log files in /var/log to free up disk space
+- Remove unused packages with apt autoremove periodically
+- Compress large files that are not frequently accessed
+- Monitor storage growth trends to plan capacity upgrades
